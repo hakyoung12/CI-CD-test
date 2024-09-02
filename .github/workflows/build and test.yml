@@ -1,0 +1,32 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main # PR이 생성될 때 이벤트를 트리거할 브랜치 설정
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # GitHub Actions가 실행될 OS 설정
+
+    strategy:
+      matrix:
+        node-version: [18, 20] # Node.js 버전 설정
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # 코드 체크아웃
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }} # 매트릭스를 사용하여 Node.js 버전 설정
+
+      - name: Install dependencies
+        run: npm install # 의존성 설치
+
+      - name: Build the project
+        run: npm run build # 빌드 실행
+
+      - name: Run tests
+        run: npm run test # 테스트 실행
