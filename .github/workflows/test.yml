@@ -1,0 +1,25 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main # PR을 열 때 이벤트를 트리거할 브랜치 설정 (예: main 브랜치에 PR 생성 시)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest # GitHub Actions가 실행될 OS 설정
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # 코드 체크아웃
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Node.js 버전 설정
+
+      - name: Install dependencies
+        run: npm install # 의존성 설치
+
+      - name: Run tests
+        run: npm test # 테스트 실행
