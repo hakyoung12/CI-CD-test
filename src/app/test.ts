@@ -1,3 +1,3 @@
-export function testFuc() {
+function testFuc() {
   return null;
 }
