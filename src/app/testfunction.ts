@@ -1,0 +1,3 @@
+function testFuc() {
+  return null;
+}
