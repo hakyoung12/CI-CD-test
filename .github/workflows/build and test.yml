@@ -1,6 +1,9 @@
 name: Build and Test
 
 on:
+  push:
+    branches:
+      - main # main 브랜치에 push 시 이벤트 트리거
   pull_request:
     branches:
       - main # PR이 생성될 때 이벤트를 트리거할 브랜치 설정
@@ -28,5 +31,13 @@ jobs:
       - name: Build the project
         run: npm run build # 빌드 실행
 
-      - name: Run tests
-        run: npm run test # 테스트 실행
+      - name: Run tests with coverage
+        run: npm run test -- --coverage # jest 실행 시 커버리지 리포트 생성 (--coverage 옵션 사용)
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3 # Codecov 액션을 사용하여 커버리지 리포트 업로드
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # Codecov 토큰 사용 (GitHub Secrets에 설정 필요)
+          files: ./coverage/*.json # 업로드할 커버리지 리포트 파일 설정
+          flags: ${{ matrix.node-version }} # 각 Node.js 버전 플래그 추가
+          name: code-coverage-report # 업로드된 리포트에 대한 이름 지정 (선택 사항)
