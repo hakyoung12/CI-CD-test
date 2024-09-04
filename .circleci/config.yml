@@ -1,13 +1,38 @@
 version: 2.1
+
 orbs:
-  # "cypress-io/cypress@3" installs the latest published
-  # version "s.x.y" of the orb. We recommend you then use
-  # the strict explicit version "cypress-io/cypress@3.x.y"
-  # to lock the version and prevent unexpected CI changes
   cypress: cypress-io/cypress@3
 
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:18.17.0 # Node 버전을 18.17.0으로 설정
+
+jobs:
+  build-and-test:
+    executor: node-executor
+    steps:
+      - checkout # 코드를 체크아웃합니다.
+      - run:
+          name: Install dependencies
+          command: npm install # 종속성 설치
+      - run:
+          name: Build the app
+          command: npm run build # 앱 빌드
+      - run:
+          name: Start the app
+          command: npm run start & # 백그라운드에서 서버 실행
+      - run:
+          name: Wait for the server to be up
+          command: npx wait-on http://localhost:3000 # 서버가 실행될 때까지 기다립니다.
+      - cypress/run:
+          start-command: 'npm run start'
+          wait-on: 'http://localhost:3000'
+          browser: 'chrome'
+          record: false # 필요에 따라 Cypress 대시보드에 기록할지 여부 설정
+
 workflows:
+  version: 2
   build:
     jobs:
-      - cypress/run: # "run" job comes from "cypress" orb
-          start-command: 'npm run start'
+      - build-and-test
