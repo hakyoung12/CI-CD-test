@@ -26,10 +26,11 @@ jobs:
           name: Wait for the server to be up
           command: npx wait-on http://localhost:3000 # 서버가 실행될 때까지 기다립니다.
       - cypress/run:
-          start-command: 'npm run start'
-          wait-on: 'http://localhost:3000'
-          browser: 'chrome'
-          record: false # 필요에 따라 Cypress 대시보드에 기록할지 여부 설정
+          name: Run Cypress tests
+          start-command: 'npm run start' # Cypress가 서버를 시작할 때 사용할 명령어
+          wait-on: 'http://localhost:3000' # 서버가 실행될 때까지 대기
+          browser: 'chrome' # 사용하는 브라우저 설정 (기본값은 'chrome')
+          record: false # Cypress 대시보드에 기록할지 여부 설정 (false로 설정)
 
 workflows:
   version: 2
